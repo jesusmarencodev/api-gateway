@@ -23,7 +23,7 @@ export class PassengerController {
         return this._clientProxyPassenger.send(PassengerMSG.FIND_ALL, '');
     }
 
-    @Get('id')
+    @Get(':id')
     findOne(@Param('id') id : string): Observable<IPassenger>{
         return this._clientProxyPassenger.send(PassengerMSG.FIND_ONE, id);
     }

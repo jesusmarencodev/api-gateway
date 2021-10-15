@@ -24,7 +24,7 @@ export class ClientProxyFlights {
             transport: Transport.RMQ,
             options: {
                 urls: this.config.get('AMQP_URL'),
-                queue: RabbitMQ.UserQueue
+                queue: RabbitMQ.PassengerQueue
             }
         })
     }
