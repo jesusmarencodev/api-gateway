@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, HttpStatus, HttpException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, HttpStatus, HttpException, UseGuards } from '@nestjs/common';
 import { IFlight } from 'src/common/interface/flight.interface';
 import { ClientProxyFlights } from '../common/proxy/client-proxy';
 import { FlightDTO } from './dto/flight.dto';
-import { FlightMSG } from '../common/constants';
+import { FlightMSG, PassengerMSG } from '../common/constants';
 import { Observable } from 'rxjs';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 
 @ApiTags('Flights')
+@UseGuards(JwtAuthGuard)
 @Controller('api/v2/flight')
 export class FlightController {
     constructor(private readonly clientProxy: ClientProxyFlights){}
@@ -24,9 +26,9 @@ export class FlightController {
         @Param('flightId') flightId: string,
         @Param('passengerId') passengerId: string
     ){
-        const passenger = await this._clientProxyFlight
-            .send(FlightMSG.FIND_ONE, passengerId)
-            .toPromise();
+        console.log(flightId, passengerId)
+        const passenger = await this._clientProxyPassenger.send(PassengerMSG.FIND_ONE, passengerId).toPromise();
+        console.log(passenger)    
         if(!passenger) throw new HttpException('Passenger not found', HttpStatus.NOT_FOUND);
 
         return this._clientProxyFlight.send(FlightMSG.ADD_PASSENGER, {flightId, passengerId});

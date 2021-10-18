@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { PassengerMSG } from 'src/common/constants';
 import { ClientProxyFlights } from 'src/common/proxy/client-proxy';
 import { IPassenger } from '../common/interface/passenger.interface';
 import { PassengerDTO } from './dto/passenger.dto';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 
 @ApiTags('Passengers')
+@UseGuards(JwtAuthGuard)
 @Controller('api/v2/passenger')
 export class PassengerController {
     constructor(private readonly clientProxy: ClientProxyFlights){}
@@ -37,4 +39,5 @@ export class PassengerController {
     delete(@Param('id') id : string):Observable<any>{
         return this._clientProxyPassenger.send(PassengerMSG.DELETE, id);
     }
+    
 }
